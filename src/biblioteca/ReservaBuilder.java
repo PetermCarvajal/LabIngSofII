@@ -2,7 +2,6 @@ package biblioteca;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Locale;
 import java.util.UUID;
 
 public class ReservaBuilder {
@@ -18,6 +17,7 @@ public class ReservaBuilder {
     public ReservaBuilder horaInicio(LocalTime valor){this.horaInicio=valor;return  this;}
     public ReservaBuilder duracionHoras(int valor){this.duracionHoras=valor;return this;}
     public ReservaBuilder sala(Sala valor){this.sala=valor;return this;}
+    public ReservaBuilder cantidadPersonas(int valor){this.cantidadPersonas=valor;return this;}
 
     public Reserva build(){
         if(estudiante == null || fecha == null|| horaInicio==null || sala==null){

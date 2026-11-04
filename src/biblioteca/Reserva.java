@@ -11,7 +11,7 @@ public class Reserva {
     private final LocalTime horaInicio;
     private final int duracionHoras;
     private final int cantidadPersonas;
-    private final  Sala sala;
+    private final Sala sala;
     private EstadoReserva estado;
 
     Reserva (String codigo, Estudiante estudiante, LocalDate fecha, LocalTime horaInicio, int duracionHoras,int cantidadPersonas, Sala sala){

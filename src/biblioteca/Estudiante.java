@@ -16,7 +16,6 @@ public class Estudiante {
     public String getIdentificador(){
         return identificador;
     }
-
     public String getNombre(){
         return nombre;
     }
