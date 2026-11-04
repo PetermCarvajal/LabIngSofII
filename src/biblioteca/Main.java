@@ -11,9 +11,9 @@ public class Main {
                 new Sala("D", "Sala D", 8)
         );
 
-        System.out.printf("Salas de la biblioteca:\n\n");
+        System.out.println("Salas de la biblioteca:\n\n");
         salas.forEach(System.out::println);
-/*
+
         EstrategiaSeleccionSala porCapacidad = new SeleccionPorCapacidad();
         System.out.println("Para 4 persoans:"+porCapacidad.seleccionar(salas,4).orElse(null)); //Poner 'disponibles' genera error lo correcto es poner salas
 
@@ -22,7 +22,6 @@ public class Main {
 
         EstrategiaSeleccionSala preferidaNoAdecuada = new SeleccionSalaPreferida("B");
         System.out.println("Preferida B para 7:"+preferidaNoAdecuada.seleccionar(salas,7).orElse(null));
-*/
     }/*
     cual es la arquitectura que elgimos para el proyecto, Diagrama de componentes de paquetees y ed despliegue
 
