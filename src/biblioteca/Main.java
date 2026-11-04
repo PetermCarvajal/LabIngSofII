@@ -1,38 +1,43 @@
 package biblioteca;
+
 import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Main {
     public static void main(String[] args) {
 
-        List <Sala> salas = List.of(
-                new Sala("A", "Sala A", 2),
-                new Sala("B", "Sala B", 4),
-                new Sala("C", "Sala C",6),
-                new Sala("D", "Sala D", 8)
-        );
+        RepositorioSalas salas = new RepositorioSalasMemoria();
+        RepositorioReservasMemoria reservas= new RepositorioReservasMemoria();
 
-        System.out.println("Salas de la biblioteca:\n\n");
-        salas.forEach(System.out::println);
+        List <ObservadorReserva> observadores = List.of(new NotificadorEstudiante(),new RegistroEventos());
 
-        EstrategiaSeleccionSala porCapacidad = new SeleccionPorCapacidad();
-        System.out.println("Para 4 persoans:"+porCapacidad.seleccionar(salas,4).orElse(null)); //Poner 'disponibles' genera error lo correcto es poner salas
+        ReservaFacade fachada = new ReservaFacade(salas,reservas, observadores);
 
-        EstrategiaSeleccionSala preferida = new SeleccionSalaPreferida("C");
-        System.out.println("Preferida C:"+porCapacidad.seleccionar(salas,4).orElse(null));
+        Estudiante laura= new Estudiante("E001", "Laura");
+        System.out.println("=== ESCENARIO PRINCIPAL ===");
+        Reserva reserva = fachada.realizarReserva(laura,LocalDate.now().plusDays(7),LocalTime.of(14, 0),2 ,4, new SeleccionPorCapacidad()).orElseThrow();
+        System.out.println(reserva);
+        System.out.println("\nLaura cancela la reserva:");
+        reserva.cancelar();
+        System.out.println(reserva);
 
-        EstrategiaSeleccionSala preferidaNoAdecuada = new SeleccionSalaPreferida("B");
-        System.out.println("Preferida B para 7:"+preferidaNoAdecuada.seleccionar(salas,7).orElse(null));
-    }/*
-    cual es la arquitectura que elgimos para el proyecto, Diagrama de componentes de paquetees y ed despliegue
+        System.out.println("\nIntento inválido: confirmaruna reserva cancelada.");
+        try{
+            reserva.confirmar();
+        } catch (IllegalStateException ex) {
+            System.out.println("Operación rechazzada: "+ex.getMessage());
+        }
 
-    Reserva re3serva=new ReservaBuilder()
-    .estudiante(new Estudiante("E001", "Laura"))
-    .horaInicio(java.time.LocalDate.now().plusDays(7))
-    .duracionHoras(2)
-    .cantidadPersonas(4)
-    .sala(new Sala("B", "Sala B", 4))
-    .build();
+        System.out.println("\n=== PRUEBA DE SALA PREFERIDA ===");
+        fachada.realizarReserva(new Estudiante("E002", "Andrés"),LocalDate.now().plusDays(8),LocalTime.of(10,0),2,4,new SeleccionSalaPreferida("C")).ifPresent(System.out::println);
 
-    System.out.println(reserva);
-    */
+        System.out.println("\n=== PRUEBA SIN SALA ADECUADA ===");
+        fachada.realizarReserva(new Estudiante("E003","Camila"), LocalDate.now().plusDays(9),LocalTime.of(9,0),2,12,new SeleccionPorCapacidad()).orElseThrow();
+
+        System.out.println("\n=== PRUEBA DE FINALIZACIÓN ===");
+        Reserva otra =fachada.realizarReserva(new Estudiante("E004", "Samuel"),LocalDate.now().plusDays(10),LocalTime.of(11,0),1,2,new SeleccionPorCapacidad()).orElseThrow();
+        otra.finalizar();
+        System.out.println(otra);
+    }
 }
